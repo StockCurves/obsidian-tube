@@ -1,28 +1,285 @@
-# Copyright (c) Streamlit Inc. (2018-2022) Snowflake Inc. (2022)
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-import inspect
-import textwrap
-
-import streamlit as st
 
 
-def show_code(demo):
-    """Showing the code of the demo."""
-    show_code = st.sidebar.checkbox("Show code", True)
-    if show_code:
-        # Showing the code of the demo.
-        st.markdown("## Code")
-        sourcelines, _ = inspect.getsourcelines(demo)
-        st.code(textwrap.dedent("".join(sourcelines[1:])))
+from pytube import YouTube
+from bs4 import BeautifulSoup
+import datetime, srt
+import re
+
+from youtube_transcript_api import YouTubeTranscriptApi as ytta
+from youtube_transcript_api.formatters import SRTFormatter
+
+
+# ## Utilities
+# - xml2srt(text)
+# - getSubs(file_srt)
+# 
+# - getSRTstatics(file_srt)
+# - rmEmoji(text)
+# 
+# - genFileNamesFromYT(yt)
+# - getYAML(yt, file_srt)
+# 
+# - srt2oneline(file_in, file_out)
+# - srt2mergelines(file_in, file_out)
+# 
+# - yt2srt(yt, file_srt)
+# - yt2mp3(yt, file_mp3)
+# - yt2md(yt, file_md)
+ 
+
+def yt2srt(yt, file_srt):    
+    transcript_en = ytta.list_transcripts(yt.video_id).find_transcript(['en']).fetch()
+    srt_formatted = SRTFormatter().format_transcript(transcript_en)
+    with open(file_srt, 'w', encoding='utf-8') as fn:
+        fn.write(srt_formatted)    
+
+def getSubs(srt_in):
+    with open(srt_in) as f:
+        subs = list( srt.parse( f.read()) )
+    return subs        
+
+def getSRTstatics(file_srt):
+    subs = getSubs(file_srt)
+    Ts = 0
+    Counts = 0
+    for i, sub in enumerate(subs):      
+        t1 = int(sub.start.total_seconds() )
+        t2 = int(sub.end.total_seconds() ) 
+        Ts += t2-t1
+
+    return {
+        "total_sec": Ts,
+        "total_time": datetime.timedelta(seconds=Ts),
+        "num_subs": len(subs)
+    }
+
+
+def getYAMLfromSRT(file_srt):
+    info = getSRTstatics(file_srt)
+    YAML = """---
+file_srt: {}
+audio_length: {}
+subtitles_length: {}
+---
+"""
+    return YAML.format(file_srt, info['total_time'], info['num_subs'])
+
+# def getCodeEn(yt):
+#     codes = getCodes(yt)
+#     code = 'a.en'
+#     for c in codes:
+#         if c.startswith('en'):
+#             code = c
+#     return code
+
+# def getCodes(yt):
+#     captions = yt.captions      
+#     languages = [k.code for k in list(captions.keys())]
+#     return languages
+
+def getYAML(yt, file_srt):
+    s =  getSRTstatics(file_srt)
+    
+    title = yt.title
+    captions = yt.captions
+        
+    code = 'a.en'
+    codes = [x.code for x in captions.keys()]
+    for c in codes:
+        if c.startswith('en'):
+            code = c
+        
+    languages = [k.code for k in list(captions.keys())]
+    
+    YAML = """---
+yt_title: {}
+yt_author: {}
+yt_channel_url: {}
+yt_video_url: https://youtu.be/{}
+yt_publish_date: {}
+yt_rating: {}
+yt_views: {}
+available_subtitles: {}
+video_length: {}
+audio_length: {}
+subtitles_length: {}
+alias: []
+date: {}
+---
+    """
+    publish_date = yt.publish_date
+    return YAML.format(rmEmoji(yt.title),  
+                       rmEmoji(yt.author), 
+                       yt.channel_url, 
+                       yt.video_id, 
+                       yt.publish_date.date(),
+                       yt.rating, 
+                       yt.views, 
+                       languages, 
+                       datetime.timedelta(seconds=yt.length), 
+                       s["total_time"],
+                       s["num_subs"],
+                       datetime.date.today())     
+
+
+# In[39]:
+
+
+def srt2oneline(file_in, file_out):   
+    subs = getSubs(file_in);
+    for s in subs:              
+        subtitle = s.content.replace('\n', ' ').replace('>>', '').replace('&#39;', '\'').strip()
+        subtitle = re.sub("[\(\[].*?[\)\]]", "", subtitle)
+        if subtitle.startswith('-'):
+            subtitle = subtitle[1:].strip()
+        s.content = subtitle
+
+    with open(file_out,'w') as f:
+        f.write(srt.compose(subs))  
+
+def srt2mergelines(file_in, file_out):
+    subs2 = getSubs(file_in);
+    sStart = 0
+    sEnd = 0
+    sDone = 1
+    longSentence = []
+    
+    for i, s in enumerate(subs2):
+        subtitle = s.content
+        if subtitle[0].isupper() and sDone==1:
+            sStart = i
+            sDone = 0
+
+        if subtitle[-1]=='.' or subtitle[-1]=='?':
+            sEnd = i
+            sDone = 1  
+
+        if (sEnd - sStart > 0) and sDone==1:
+            pair = [sStart, sEnd]
+            longSentence.append(pair)
+            subs2[sStart].end = subs2[sEnd].end
+            for j in range(sStart+1, sEnd+1):
+                subs2[sStart].content += ' ' + subs2[j].content 
+                subs2[j].content=''
+
+    with open(file_out,'w') as f:
+        f.write(srt.compose(subs2))  
+
+def rmEmoji(text):
+    _t = re.sub('[^a-zA-Z0-9|# \' \n\.]', ' ', text).strip()
+    _t = [x for x in _t.split(' ')]
+    _t2 = []    
+
+    for i, x in enumerate(_t):
+        if x !='':
+            _t2.append(x)  
+
+    return ' '.join(_t2)
+
+def genFileNamesFromYT(yt):        
+    title_original = rmEmoji(yt.title)
+    title0 = title_original.split('|')[0]
+    title0 = title0.split('#')[0].strip()    
+    title1 = title0.replace(" ", "_")
+    
+    blk = [x[0] for x in title0.split(' ')]
+    blk = ''.join(blk[:3])
+    fn  = {   
+            "title_original": yt.title ,
+            "title0": title0,
+            "title1": title1, 
+            'block': blk   # can only have letters and numbers
+        }
+    return fn
+
+ 
+def yt2md(yt, md_out):
+    src_media = 'https://youtu.be/' + yt.video_id
+    iframe = """
+<iframe width="560" height="315" src="https://www.youtube.com/embed/{}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+"""
+    iframe = iframe.format(yt.video_id) +'\n\n'
+
+    fn = genFileNamesFromYT(yt)
+    
+    srt_noext = fn["title1"]
+    file_srt0 = 'temp_0.srt'
+    file_srt1 = 'temp_1.srt'
+    file_srt2 = srt_noext + '_2.srt'
+    
+    yt2srt(yt, file_srt0)
+    srt2oneline(file_srt0, file_srt1)
+    # srt2mergelines(file_srt1, file_srt2)    
+    YAML = getYAML(yt, file_srt1)
+    
+    subs = getSubs(file_srt2)
+    file_md = srt_noext + '_raw.md'
+    blockID = '^' + fn["block"].replace('_','')
+
+    # index, subtitle, file_mp3, t1, t2
+    row3c = '#### [{}]({}#t={},{})  \n{}  {}{}\n'   #DO NOT Add Space In The Template
+    lines = ''
+    thumbnail = '\n![[{}]]\n'.format(yt.thumbnail_url)
+    for i, sub in enumerate(subs):      
+        t1 = int(sub.start.total_seconds() * 1000)
+        t2 = int(sub.end.total_seconds() * 1000)  
+        t1_str = sub.start
+        t2_str = sub.end
+        itemNum = f'{sub.index:04d}'
+        subtitle = sub.content   #.replace('\n',' ')    # for captions display?
+        lines += '\n' + row3c.format(itemNum,  src_media, t1/1000, t2/1000,  subtitle, blockID, itemNum)  
+
+    title_md = "\n## " + fn["title0"] +'\n'    
+    lines = YAML +  title_md + iframe +   lines    
+    with open(md_out, 'w') as f:
+        f.write(lines)    
+    
+def srt2md(file_srt, file_md, src_media):  
+    srt_noext = file_srt[:-4]
+    
+    file_srt0 = file_srt
+    file_srt1 = 'srt_1.srt'
+    file_srt2 = 'srt_2.srt'
+    blockID = '^'+''.join(src_media.split(' '))[:3]
+    
+    srt2oneline(file_srt0, file_srt1)
+    srt2mergelines(file_srt1, file_srt2)    
+    YAML = getYAMLfromSRT(file_srt2)
+    
+    subs = getSubs(file_srt2)
+    row3c = '#### [{}]({}#t={},{})  \n{}  {}{}\n'   #DO NOT Add Space In The Template
+    lines = ''
+
+    for i, sub in enumerate(subs):      
+        t1 = int(sub.start.total_seconds() * 1000)
+        t2 = int(sub.end.total_seconds() * 1000)  
+        t1_str = sub.start
+        t2_str = sub.end
+        itemNum = f'{sub.index:04d}'
+        subtitle = sub.content   #.replace('\n',' ')                  # for captions display?
+        lines += '\n' + row3c.format(itemNum,  src_media, t1/1000, t2/1000,  subtitle, blockID, itemNum)  
+
+    lines = YAML +  '\n' + lines    
+    with open(file_md, 'w') as f:
+        f.write(lines)        
+
+
+# # Start to output
+ 
+# url_yt = 'https://m.youtube.com/watch?v=T3GPIlpKP48'  #auto gen subtitle
+# url_yt = 'https://youtu.be/UF8uR6Z6KLc'  # steve job
+# url_yt = "https://youtu.be/eEA0Y54-Ds8"  # think in english
+# url_yt = 'https://youtu.be/T3GPIlpKP48' # last date in taiwan
+# url_yt = 'https://www.youtube.com/watch?v=O6iVsS-RDYI'   # Data Commons
+# url_yt = "https://www.youtube.com/watch?v=MpLHMKTolVw"   # The NBA Data Scientist
+# url_yt = "https://www.youtube.com/watch?v=HGHX8OIaupk"   # Energy storage breakthroughs
+# url_yt = "https://www.youtube.com/watch?v=yeaQUhAOdtk"   # How to fight climate change with parking lots
+
+# yt = YouTube(url_yt)
+# path_md = r'C:\Users\iMonet\OneDrive\文件\obsidian\EnglishTube\000_Inbox' 
+# fn = genFileNamesFromYT(yt)
+# print(fn)
+# file_md = path_md + '\\' +  fn["title1"] + '_raw.md'
+# yt2md(yt, file_md)
+ 
+
