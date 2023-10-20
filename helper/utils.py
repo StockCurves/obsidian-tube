@@ -1,13 +1,12 @@
 
 
 from pytube import YouTube
-from bs4 import BeautifulSoup
+# from bs4 import BeautifulSoup 
 import datetime, srt
 import re
-
+import streamlit as st
 from youtube_transcript_api import YouTubeTranscriptApi as ytta
 from youtube_transcript_api.formatters import SRTFormatter
-
 
 # ## Utilities
 # - xml2srt(text)
@@ -53,7 +52,6 @@ def getSRTstatics(file_srt):
         "num_subs": len(subs)
     }
 
-
 def getYAMLfromSRT(file_srt):
     info = getSRTstatics(file_srt)
     YAML = """---
@@ -63,19 +61,6 @@ subtitles_length: {}
 ---
 """
     return YAML.format(file_srt, info['total_time'], info['num_subs'])
-
-# def getCodeEn(yt):
-#     codes = getCodes(yt)
-#     code = 'a.en'
-#     for c in codes:
-#         if c.startswith('en'):
-#             code = c
-#     return code
-
-# def getCodes(yt):
-#     captions = yt.captions      
-#     languages = [k.code for k in list(captions.keys())]
-#     return languages
 
 def getYAML(yt, file_srt):
     s =  getSRTstatics(file_srt)
@@ -120,10 +105,6 @@ date: {}
                        s["total_time"],
                        s["num_subs"],
                        datetime.date.today())     
-
-
-# In[39]:
-
 
 def srt2oneline(file_in, file_out):   
     subs = getSubs(file_in);
@@ -191,7 +172,6 @@ def genFileNamesFromYT(yt):
             'block': blk   # can only have letters and numbers
         }
     return fn
-
  
 def yt2md(yt, md_out):
     src_media = 'https://youtu.be/' + yt.video_id
@@ -202,17 +182,17 @@ def yt2md(yt, md_out):
 
     fn = genFileNamesFromYT(yt)
     
-    srt_noext = fn["title1"]
-    file_srt0 = 'temp_0.srt'
-    file_srt1 = 'temp_1.srt'
-    file_srt2 = srt_noext + '_2.srt'
+    srt_noext = './workspace/' + fn["title1"]
+    file_srt0 = srt_noext + '_0.srt'
+    file_srt1 = srt_noext + '_1.srt'
+    # file_srt2 = srt_noext + '_2.srt'
     
     yt2srt(yt, file_srt0)
     srt2oneline(file_srt0, file_srt1)
     # srt2mergelines(file_srt1, file_srt2)    
     YAML = getYAML(yt, file_srt1)
     
-    subs = getSubs(file_srt2)
+    subs = getSubs(file_srt1)
     file_md = srt_noext + '_raw.md'
     blockID = '^' + fn["block"].replace('_','')
 
@@ -231,38 +211,13 @@ def yt2md(yt, md_out):
 
     title_md = "\n## " + fn["title0"] +'\n'    
     lines = YAML +  title_md + iframe +   lines    
+
+    # st.write(lines)
     with open(md_out, 'w') as f:
         f.write(lines)    
-    
-def srt2md(file_srt, file_md, src_media):  
-    srt_noext = file_srt[:-4]
-    
-    file_srt0 = file_srt
-    file_srt1 = 'srt_1.srt'
-    file_srt2 = 'srt_2.srt'
-    blockID = '^'+''.join(src_media.split(' '))[:3]
-    
-    srt2oneline(file_srt0, file_srt1)
-    srt2mergelines(file_srt1, file_srt2)    
-    YAML = getYAMLfromSRT(file_srt2)
-    
-    subs = getSubs(file_srt2)
-    row3c = '#### [{}]({}#t={},{})  \n{}  {}{}\n'   #DO NOT Add Space In The Template
-    lines = ''
 
-    for i, sub in enumerate(subs):      
-        t1 = int(sub.start.total_seconds() * 1000)
-        t2 = int(sub.end.total_seconds() * 1000)  
-        t1_str = sub.start
-        t2_str = sub.end
-        itemNum = f'{sub.index:04d}'
-        subtitle = sub.content   #.replace('\n',' ')                  # for captions display?
-        lines += '\n' + row3c.format(itemNum,  src_media, t1/1000, t2/1000,  subtitle, blockID, itemNum)  
-
-    lines = YAML +  '\n' + lines    
-    with open(file_md, 'w') as f:
-        f.write(lines)        
-
+    return lines        
+ 
 
 # # Start to output
  
