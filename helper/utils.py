@@ -187,10 +187,10 @@ def yt2md(yt, md_out):
     file_srt1 = srt_noext + '_1.srt'
     file_srt2 = srt_noext + '_2.srt'
     
-    yt2srt(yt, file_srt0)
-    srt2oneline(file_srt0, file_srt1)
-    srt2mergelines(file_srt1, file_srt2)    
-    YAML = getYAML(yt, file_srt1)
+    yt2srt(yt, file_srt2)
+    srt2oneline(file_srt2, file_srt2)
+    srt2mergelines(file_srt2, file_srt2)    
+    YAML = getYAML(yt, file_srt2)
     
     subs = getSubs(file_srt2)
     file_md = srt_noext + '_raw.md'
@@ -217,27 +217,8 @@ def yt2md(yt, md_out):
         f.write(lines)    
 
     return {
-        "fn": title_md,            
+        "fn": file_md.split('/')[2],            
         "md": lines        
     }
- 
-
-# # Start to output
- 
-# url_yt = 'https://m.youtube.com/watch?v=T3GPIlpKP48'  #auto gen subtitle
-# url_yt = 'https://youtu.be/UF8uR6Z6KLc'  # steve job
-# url_yt = "https://youtu.be/eEA0Y54-Ds8"  # think in english
-# url_yt = 'https://youtu.be/T3GPIlpKP48' # last date in taiwan
-# url_yt = 'https://www.youtube.com/watch?v=O6iVsS-RDYI'   # Data Commons
-# url_yt = "https://www.youtube.com/watch?v=MpLHMKTolVw"   # The NBA Data Scientist
-# url_yt = "https://www.youtube.com/watch?v=HGHX8OIaupk"   # Energy storage breakthroughs
-# url_yt = "https://www.youtube.com/watch?v=yeaQUhAOdtk"   # How to fight climate change with parking lots
-
-# yt = YouTube(url_yt)
-# path_md = r'C:\Users\iMonet\OneDrive\文件\obsidian\EnglishTube\000_Inbox' 
-# fn = genFileNamesFromYT(yt)
-# print(fn)
-# file_md = path_md + '\\' +  fn["title1"] + '_raw.md'
-# yt2md(yt, file_md)
  
 

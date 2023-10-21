@@ -1,0 +1,332 @@
+1
+00:00:00,929 --> 00:00:07,645
+If you're a basketball fan, you know your team's big stars, head coach, maybe even the rookie bench warmers.
+
+2
+00:00:07,645 --> 00:00:13,624
+But you probably know very little about the Ph.D. mathematicians like this woman.
+
+3
+00:00:13,624 --> 00:00:16,212
+Her job is to crunch the numbers of the game.
+
+4
+00:00:16,212 --> 00:00:20,117
+We're all in sort of an arm's race to acquire information.
+
+5
+00:00:20,117 --> 00:00:24,223
+And she's turning basketball into a hard, cold science.
+
+6
+00:00:24,223 --> 00:00:28,390
+My name is Ivana Seric and I'm a data scientist.
+
+7
+00:00:42,449 --> 00:00:46,459
+For many years, Philly was a tough place to be a basketball fan.
+
+8
+00:00:47,356 --> 00:00:54,578
+But having reached the top eight in the playoffs for a second season in a row, the 76ers right now are in a renaissance.
+
+9
+00:00:54,578 --> 00:00:57,918
+Embiid fakes, Embiid down the lane.
+
+10
+00:00:57,918 --> 00:01:04,264
+Just across the river is where the team's been hard at work and it's where I went to go meet Ivana in April.
+
+11
+00:01:04,264 --> 00:01:12,050
+This 125,000 square foot facility comes with all the features you'd expect from an NBA training complex.
+
+12
+00:01:12,050 --> 00:01:17,540
+It also features the office of people like Ivana who support the team behind the scenes.
+
+13
+00:01:17,540 --> 00:01:22,380
+My job involves analyzing the data that we have from NBA games.
+
+14
+00:01:22,380 --> 00:01:25,597
+My focus is mostly on the coaching strategy.
+
+15
+00:01:25,597 --> 00:01:26,995
+Coaches have a lot of intuition.
+
+16
+00:01:26,995 --> 00:01:35,713
+They know the game, they know the players, but we try to complete their picture of the players with data, which is hopefully unbiased.
+
+17
+00:01:35,713 --> 00:01:39,392
+Ivana is part of the Sixers 10-person analytics team.
+
+18
+00:01:39,392 --> 00:01:45,063
+The work of these statisticians has already forced a profound change in the game of basketball.
+
+19
+00:01:45,063 --> 00:01:47,077
+Teams are taking more three point shots.
+
+20
+00:01:47,077 --> 00:01:48,934
+Embiid for three.
+
+21
+00:01:48,934 --> 00:01:56,698
+Even though we make them at lower percentage than the shots closer to the basket, but they're worth more points and the trade off actually pays off.
+
+22
+00:01:56,698 --> 00:01:59,039
+Take a look at this clip from the '80's.
+
+23
+00:01:59,039 --> 00:02:02,233
+See how all the players are bunched up right by the hoop?
+
+24
+00:02:02,233 --> 00:02:03,934
+Compare that with today.
+
+25
+00:02:03,934 --> 00:02:08,456
+More and more of the action is taking place at the three point line.
+
+26
+00:02:08,456 --> 00:02:13,249
+Of course, it's not just basketball that's been reshaped by analytics.
+
+27
+00:02:13,249 --> 00:02:23,534
+Businesses of all kinds are tracking a ton of information they never tracked before thanks to new sensors, improvements in computing power, implementing cost and data storage.
+
+28
+00:02:23,534 --> 00:02:30,338
+Data scientists are the people making sense of that information with a combination of statistics and computer programming.
+
+29
+00:02:30,338 --> 00:02:37,674
+The profession's expanded rapidly in recent years and comes with an average salary of $130,000 a year.
+
+30
+00:02:39,558 --> 00:02:45,240
+Much of the data Ivana works with comes from technology the NBA adopted in 2013.
+
+31
+00:02:45,240 --> 00:02:53,632
+Every NBA arena has cameras that record the games and then from those cameras, they can extract player locations on a court.
+
+32
+00:02:53,632 --> 00:02:59,955
+These cameras record 25 frames per second, so for each basketball game, there's a million of throes of data.
+
+33
+00:02:59,955 --> 00:03:04,635
+And that allows Ivana to analyze plays that were previously difficult to track.
+
+34
+00:03:04,635 --> 00:03:06,976
+For example, take the pick and roll.
+
+35
+00:03:06,976 --> 00:03:09,954
+It's one of the most important plays in basketball.
+
+36
+00:03:09,954 --> 00:03:15,703
+It involves one player setting up a human shield to help a teammate shake off an opponent.
+
+37
+00:03:15,703 --> 00:03:29,771
+So we can look at each player, how much they run pick and rolls and how good they are at that and then we can select a player and see how often he's going to pass out of the pick and roll, how often he's going to shoot.
+
+38
+00:03:29,771 --> 00:03:33,619
+And how would that help you develop a strategy for the coaches?
+
+39
+00:03:33,619 --> 00:03:37,951
+So we could, for example this player, he's going to pass pretty frequently.
+
+40
+00:03:37,951 --> 00:03:43,926
+We can say this to the coaches and they're going to decide on the defensive strategy for the player.
+
+41
+00:03:43,926 --> 00:03:51,375
+But this makes Ivana's job look simpler than it actually is because she spends a lot of her time coding to extract the information she needs.
+
+42
+00:03:51,375 --> 00:03:55,515
+And I tried really hard to get her to talk about what exactly she looks for.
+
+43
+00:03:55,515 --> 00:04:01,356
+And there's some stuff that you do that's beyond just these interfaces that you showed me today, right?
+
+44
+00:04:01,356 --> 00:04:02,189
+Yep.
+
+45
+00:04:02,189 --> 00:04:03,089
+Can you tell me more about that?
+
+46
+00:04:03,089 --> 00:04:04,506
+Um, not really.
+
+47
+00:04:05,867 --> 00:04:07,634
+So that's like a trade secret?
+
+48
+00:04:07,634 --> 00:04:08,613
+Yes.
+
+49
+00:04:08,613 --> 00:04:13,384
+NBA's a very competitive league, so whatever can give us that advantage, we try to keep it.
+
+50
+00:04:15,826 --> 00:04:22,678
+When advising the coaches with her analysis, Ivana has a decided advantage over many of her peers.
+
+51
+00:04:22,678 --> 00:04:27,324
+I started playing when I was seven years old and I just loved it from the first day.
+
+52
+00:04:27,324 --> 00:04:31,340
+I think 'cause the game is so dynamic and there's so many different skills.
+
+53
+00:04:31,340 --> 00:04:34,412
+It's what I wanted to do since I was seven years old, really.
+
+54
+00:04:34,412 --> 00:04:36,291
+I wanted to be a professional basketball player.
+
+55
+00:04:36,291 --> 00:04:37,540
+Yeah.
+
+56
+00:04:37,540 --> 00:04:44,109
+At 19, Ivana moved from her home in Croatia to New Jersey to go to college on a basketball scholarship.
+
+57
+00:04:44,109 --> 00:04:49,758
+And while she was a star player on her Division I team, she was also an exceptional math student.
+
+58
+00:04:49,758 --> 00:04:54,585
+Much of her life has been like that, balancing her love of basketball with her love of math.
+
+59
+00:04:54,585 --> 00:04:57,578
+I always thought I'm going to have to choose between the two.
+
+60
+00:04:57,578 --> 00:05:05,004
+I went to graduate school and that's when I really thought that, okay, I'm really choosing one or the other this time.
+
+61
+00:05:06,969 --> 00:05:09,304
+So I thought I really chose just math.
+
+62
+00:05:09,304 --> 00:05:12,377
+The plan was to become a researcher or a professor.
+
+63
+00:05:12,377 --> 00:05:25,217
+Then, three years into pursuing her Ph.D. in math, she heard that NBA teams were starting to hire data scientists, but only 26% of data scientists are women and Ivana didn't like her odds.
+
+64
+00:05:25,217 --> 00:05:29,222
+When I saw the job posting, I didn't think I would actually get the job.
+
+65
+00:05:29,222 --> 00:05:38,492
+I thought because being a woman in such a male dominated field, they would never really consider me or give me a fair shot.
+
+66
+00:05:38,492 --> 00:05:40,607
+But this prediction turned out to be wrong.
+
+67
+00:05:40,607 --> 00:05:44,837
+She's got both the technical and basketball backgrounds, which is sort of the ideal mix.
+
+68
+00:05:44,837 --> 00:05:57,788
+Her ability to capture these complex insights and then share them with players or coaches, with executives in a way that makes sense to us is super valuable and frankly, not that common.
+
+69
+00:05:57,788 --> 00:06:01,625
+The next evening, I attended my very first NBA game.
+
+70
+00:06:01,625 --> 00:06:12,221
+It was the last game of the regular season before the playoffs and my chance to catch up with the ultimate beneficiary of Ivana's work, the Sixers head coach, Brett Brown.
+
+71
+00:06:12,221 --> 00:06:14,606
+The team has had a great season so far.
+
+72
+00:06:14,606 --> 00:06:18,387
+What role do you think analytics has played in that success?
+
+73
+00:06:18,387 --> 00:06:22,809
+I think it's played a significant role in our success and many, many others.
+
+74
+00:06:22,809 --> 00:06:33,302
+The NBA playoffs are going to start in three or four days and immediately, we'll get an analytical assessment on the strengths or weaknesses of an opponent.
+
+75
+00:06:33,302 --> 00:06:37,826
+You can assess play calls, good or bad ones, ones you should do more, ones you should avoid.
+
+76
+00:06:37,826 --> 00:06:46,872
+Really, I think it's going to continue to grow and play a significant role in the design of organizations and coaching staff's beliefs.
+
+77
+00:06:46,872 --> 00:06:53,150
+That night, even though none of the starting players played in the game, the Sixers ended up crushing the Bulls.
+
+78
+00:06:53,150 --> 00:07:01,296
+A month later, the Sixers ended up advancing to the conference semi-finals and suffered a tough defeat at the hands of the Toronto Raptors.
+
+79
+00:07:01,296 --> 00:07:04,019
+Is this the tie breaker?
+
+80
+00:07:07,349 --> 00:07:12,974
+Ivana and her colleagues will keep looking for ways to help their team do better in the seasons ahead.
+
+81
+00:07:12,974 --> 00:07:18,228
+But the Sixers victories on the court won't be the only way she's measuring her success.
+
+82
+00:07:18,228 --> 00:07:42,372
+It's really exciting to be able to show young girls that they can actually have careers, but it also feels like a big responsibility because if I don't do well, it's going to seem like a woman cannot do this job, because there are not so many of us.
+
+83
+00:07:42,372 --> 00:07:52,934
+It's a big part of what motivates me every day to be able to show young girls that they can succeed in STEM fields and in sports.
+
