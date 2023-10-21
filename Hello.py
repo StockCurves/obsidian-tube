@@ -30,6 +30,19 @@ def run():
     # Create an input field to enter the URL
     url_yt = st.text_input("Enter an Youtube URL")
 
+    st.write('''Here are some example urls for you to try:
+             https://www.youtube.com/watch?v=NqVoOC2azZI  # Auto genenerataed subtitles
+             https://m.youtube.com/watch?v=T3GPIlpKP48     #auto gen subtitle
+            https://youtu.be/UF8uR6Z6KLc                  # steve job
+            https://youtu.be/eEA0Y54-Ds8                  # think in english
+            https://youtu.be/T3GPIlpKP48                  # last date in taiwan
+            https://www.youtube.com/watch?v=O6iVsS-RDYI   # Data Commons
+            https://www.youtube.com/watch?v=MpLHMKTolVw   # The NBA Data Scientist
+            https://www.youtube.com/watch?v=HGHX8OIaupk   # Energy storage breakthroughs
+            https://www.youtube.com/watch?v=yeaQUhAOdtk   # How to fight climate change with parking lots
+                        
+             ''')
+
     # Parse and display the URL before the question mark
     if url_yt:
         # parsed_url = url_input.split('?')[0]
@@ -44,8 +57,6 @@ def run():
         # https://www.youtube.com/watch?v=HGHX8OIaupk   # Energy storage breakthroughs
         # https://www.youtube.com/watch?v=yeaQUhAOdtk   # How to fight climate change with parking lots
 
-
-
         yt = YouTube(url_yt)
         # path_md = r'C:\Users\iMonet\OneDrive\文件\obsidian\EnglishTube\000_Inbox' 
         fn = genFileNamesFromYT(yt)
@@ -53,15 +64,15 @@ def run():
         file_md = fn["title1"] + '_raw.md'
         f_md = yt2md(yt, file_md)
 
-        import streamlit as st
+        # import streamlit as st
 
-        text_contents = '''This is some text'''
-        st.download_button('Download some text', text_contents)        
+        # text_contents = '''This is some text'''
+        # st.download_button('Download some text', text_contents)        
 
         st.download_button(
             label = "Download .md file",
-            data = f_md,
-            file_name='abc.md',
+            data = f_md["md"],
+            file_name = f_md["fn"],
             # mime='text/csv',
         )
 

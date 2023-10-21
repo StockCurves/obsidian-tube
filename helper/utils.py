@@ -185,21 +185,21 @@ def yt2md(yt, md_out):
     srt_noext = './workspace/' + fn["title1"]
     file_srt0 = srt_noext + '_0.srt'
     file_srt1 = srt_noext + '_1.srt'
-    # file_srt2 = srt_noext + '_2.srt'
+    file_srt2 = srt_noext + '_2.srt'
     
     yt2srt(yt, file_srt0)
     srt2oneline(file_srt0, file_srt1)
-    # srt2mergelines(file_srt1, file_srt2)    
+    srt2mergelines(file_srt1, file_srt2)    
     YAML = getYAML(yt, file_srt1)
     
-    subs = getSubs(file_srt1)
+    subs = getSubs(file_srt2)
     file_md = srt_noext + '_raw.md'
     blockID = '^' + fn["block"].replace('_','')
 
     # index, subtitle, file_mp3, t1, t2
     row3c = '#### [{}]({}#t={},{})  \n{}  {}{}\n'   #DO NOT Add Space In The Template
     lines = ''
-    thumbnail = '\n![[{}]]\n'.format(yt.thumbnail_url)
+    # thumbnail = '\n![[{}]]\n'.format(yt.thumbnail_url)
     for i, sub in enumerate(subs):      
         t1 = int(sub.start.total_seconds() * 1000)
         t2 = int(sub.end.total_seconds() * 1000)  
@@ -216,7 +216,10 @@ def yt2md(yt, md_out):
     with open(md_out, 'w') as f:
         f.write(lines)    
 
-    return lines        
+    return {
+        "fn": title_md,            
+        "md": lines        
+    }
  
 
 # # Start to output
