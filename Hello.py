@@ -14,7 +14,7 @@
 
 import streamlit as st
 from streamlit.logger import get_logger
-from helper.utils import *
+from utils import *
 
 LOGGER = get_logger(__name__)
 
